@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "库存";
+}
+
+<div class="col-md-12" id="grid-0">
+    <div class="panel panel-widget" id="p01">
+        <div class="panel-heading ui-sortable-handle">
+            <span class="panel-icon">
+                <i class="fa fa-asterisk"></i>
+            </span>
+            <span class="panel-title"> 所有库存</span>
+        </div>
+        <div class="panel-body">
+            <div class="dataTables_wrapper">
+                <div class="span6">
+                    <div class="dataTables_filter">
+                        <label>搜索: <input type="text" class="form-control" aria-controls="dynamic-table"></label>
+                    </div>
+                </div>
+                <table class="table table-bordered adv-table" id="dynamic-table">
+                    <thead>
+                        <tr role="row">
+                            <th class="sorting_desc" role="columnheader" aria-controls="dynamic-table">类别</th>
+                            <th class="sorting" role="columnheader" aria-controls="dynamic-table">型号</th>
+                            <th class="sorting" role="columnheader" aria-controls="dynamic-table">数量</th>
+                            <th class="sorting" role="columnheader" aria-controls="dynamic-table">详细</th>
+                            <th role="columnheader" aria-controls="dynamic-table" style="width:200px"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr class="odd">
+                            <td>台式机</td>
+                            <td>optiplex 7040</td>
+                            <td>5</td>
+                            <td>CPU:i7;内存:8G</td>
+                            <td class="center">
+                                <button class="btn btn-info" type="button"><i class="fa fa-edit"></i> 修改</button>
+                                <button class="btn btn-danger" type="button"><i class="fa fa-trash-o"></i> 删除</button>
+                            </td>
+                        </tr>
+                        <tr class="even">
+                            <td>硒鼓</td>
+                            <td>LaserJet 12A</td>
+                            <td>15</td>
+                            <td></td>
+                            <td class="center">
+                                <button class="btn btn-info" type="button"><i class="fa fa-edit"></i> 修改</button>
+                                <button class="btn btn-danger" type="button"><i class="fa fa-trash-o"></i> 删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="dataTables_info">1到10，共57条记录</div>
+                <div class="dataTables_paginate">
+                    <ul>
+                        <li class="prev disabled"><a href="#"><i class="fa fa-arrow-left"></i> 前一页</a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li class="next"><a href="#">后一页 <i class="fa fa-arrow-right"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

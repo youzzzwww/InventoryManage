@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "申请设备";
+}
+
+<div class="widget-container">
+    <fieldset title="设备种类" class="step">
+        <legend>选择种类</legend>
+        <div class="stepy-tab">
+            <ul class="stepy-titles clearfix">
+                <li class="current-step"><div>台式机</div></li>
+                <li><div>硒鼓</div></li>
+            </ul>
+        </div>
+    </fieldset>
+</div>
+
+<div class="widget-container">
+    <fieldset title="设备型号" class="step">
+        <legend>选择型号</legend>
+        <div class="stepy-tab">
+            <ul class="stepy-titles clearfix">
+                <li class="current-step"><div>optiplex 7040</div></li>
+                <li><div>GX 620</div></li>
+            </ul>
+        </div>
+    </fieldset>
+</div>
+
+<div class="widget-container">
+    <fieldset title="详细信息" class="step">
+        <legend>选择设备</legend>
+        <div class="stepy-tab">
+            <ul class="stepy-titles clearfix">
+                <li class="current-step">
+                    <span>CPU:i7-6700</span>
+                    <span>内存:8G</span>
+                </li>
+            </ul>
+        </div>
+    </fieldset>
+</div>
+
+<div class="widget-container">
+    <fieldset title="申请理由" class="step">
+        <legend>申请原因</legend>
+        <div class="col-sm-5">
+            <textarea class="form-control" placeholder="申请理由" rows="3"></textarea>
+        </div>
+    </fieldset>
+</div>
+
+<div class="widget-container">
+    <fieldset title="申请数量" class="step">
+        <legend>数量</legend>
+        <div class="col-sm-5">
+            <input type="number" min="1" max="10" value="1" />
+        </div>
+    </fieldset>
+</div>
+
+
+<div class="widget-container">
+    <fieldset title="" class="step">
+        <legend></legend>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">申请</button>
+            <button type="reset" class="btn">取消</button>
+        </div>
+    </fieldset>
+</div>
