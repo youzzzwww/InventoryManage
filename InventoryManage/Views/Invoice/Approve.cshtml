@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewData["Title"] = "设备审批";
+}
+
+<div class="col-md-12" id="grid-0">
+    <section class="panel">
+        <header class="panel-heading custom-tab ">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#all" data-toggle="tab" aria-expanded="true">所有申请</a>
+                </li>
+                <li class="">
+                    <a href="#assets" data-toggle="tab" aria-expanded="false">固定资产</a>
+                </li>
+                <li class="">
+                    <a href="#consumables" data-toggle="tab" aria-expanded="false">耗材</a>
+                </li>
+            </ul>
+        </header>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="all">
+                    <div class="dataTables_length">
+                        <div class="form-check">
+                            <input type="checkbox" /><label> 未审批</label>
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="dataTables_filter">
+                            <label>搜索: <input type="text" class="form-control" aria-controls="dynamic-table"></label>
+                        </div>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>申请人</th>
+                                <th>种类</th>
+                                <th>型号</th>
+                                <th>数量</th>
+                                <th>申请理由</th>
+                                <th>审批意见</th>
+                                <th style="width:240px"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2017-07-11</td>
+                                <td>麦伟贤</td>
+                                <td>硒鼓</td>
+                                <td>LaserJet 12A</td>
+                                <td>2</td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="label label-success">已通过</span></td>
+                            </tr>
+                            <tr>
+                                <td>2017-08-11</td>
+                                <td>谢松波</td>
+                                <td>台式机</td>
+                                <td>optiplex 7040</td>
+                                <td>1</td>
+                                <td>测试</td>
+                                <td></td>
+                                <td>
+                                    <button class="btn btn-success" type="button"><i class="fa fa-check"></i> 同意</button>
+                                    <button class="btn btn-info" type="button"><i class="fa fa-edit"></i> 另选</button>
+                                    <button class="btn btn-danger" type="button"><i class="fa fa-times"></i> 拒绝</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="dataTables_info">1到10，共57条记录</div>
+                    <div class="dataTables_paginate">
+                        <ul>
+                            <li class="prev disabled"><a href="#"><i class="fa fa-arrow-left"></i> 前一页</a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li class="next"><a href="#">后一页 <i class="fa fa-arrow-right"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="assets">
+                    <p>固定资产</p>
+                </div>
+                <div class="tab-pane" id="consumables">
+                    <p>耗材</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

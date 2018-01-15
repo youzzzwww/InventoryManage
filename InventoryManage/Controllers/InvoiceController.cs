@@ -12,5 +12,10 @@ namespace InventoryManage.Controllers
         {
             return View();
         }
+
+        public IActionResult Approve()
+        {
+            return View();
+        }
     }
 }

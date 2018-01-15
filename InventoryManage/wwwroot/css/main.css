@@ -514,7 +514,6 @@ legend {
     float: left;
 }
 .dataTables_length label {
-    float: left;
     text-align: left;
     font-weight: 300;
 }
@@ -558,6 +557,38 @@ table thead .sorting, table thead .sorting_asc, table thead .sorting_desc, table
 .adv-table tr.odd {
     background-color: #F9F9F9;
 }
+
+/******** Approve *********/
+.panel-heading.custom-tab {
+    padding: 8px 15px;
+}
+
+.custom-tab {
+    background: #e0e1e7 !important;
+    border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    border-bottom: none;
+}
+    .custom-tab li a:hover, .custom-tab li.active a {
+        border-radius: 0 !important;
+        background: #fff !important;
+        color: #65CEA7 !important;
+    }
+
+.panel-heading .nav {
+    border: medium none;
+    font-size: 15px;
+}
+
+    .panel-heading .nav > li:first-child.active > a, .panel-heading .nav > li:first-child > a:hover {
+        border-radius: 4px 0 0 0 !important;
+        -webkit-border-radius: 4px 0 0 0 !important;
+    }
+    .panel-heading .nav > li > a, .panel-heading .nav > li.active > a, .panel-heading .nav > li.active > a:hover, .panel-heading .nav > li.active > a:focus {
+        border-width: 0;
+        border-radius: 0;
+    }
+
 /***********************
 ********* Footer ******
 ************************/
