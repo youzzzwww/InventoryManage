@@ -17,12 +17,15 @@ namespace InventoryManage.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "入职日期")]
         public DateTime EnrollmentDate { get; set; }
+        [Required]
         [Display(Name = "姓名")]
         [StringLength(50, ErrorMessage = "姓名不能超过50个字符")]
-        public override string UserName { get; set; }
+        public string Name { get; set; }
+        [Required]
         public bool Disabled { get; set; }
-
         [Display(Name = "部门")]
         public String Department { get; set; }
+
+        public ICollection<Invoice> Invoices { get; set; }
     }   
 }
