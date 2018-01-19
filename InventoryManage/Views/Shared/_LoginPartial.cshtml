@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<InventoryManage.Models.Worker> SignInManager
+@inject UserManager<InventoryManage.Models.Worker> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li>
+        <a href="#">你好,@UserManager.GetUserName(User)!</a>
+    </li>
+    <li>
+        <form asp-controller="Home" asp-action="LogOff" method="post">
+            <button type="submit" class="btn btn-link navbar-btn navbar-link">退出</button>
+        </form>
+    </li>
+}
+else
+{
+    <li><a asp-controller="Home" asp-action="Login">登录</a></li>
+}

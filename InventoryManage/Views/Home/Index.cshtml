@@ -1,4 +1,5 @@
-﻿@{
+﻿@model InventoryManage.Models.PersonalIndexViewModel
+@{
     ViewData["Title"] = "主页";
 }
 
@@ -11,30 +12,33 @@
             <span class="panel-title"> 资产设备</span>
         </div>
         <div class="panel-body">
-            <div class="col-sm-3">
-                <div class="panel">
-                    <div class="card card-cascade">
-                        <div class="view gradient-card-header bg-aqua">
-                            <h3>台式机</h3>
-                            <h4>optiplex 7040</h4>
-                            <div class="icon">
-                                <h3>1</h3>
+            @foreach (var a in Model.assetViewModel)
+            {
+                <div class="col-sm-3">
+                    <div class="panel">
+                        <div class="card card-cascade">
+                            <div class="view gradient-card-header bg-aqua">
+                                <h3>@Html.DisplayFor(x => a.Category)</h3>
+                                <h4>@Html.DisplayFor(x => a.Name)</h4>
+                                <div class="icon">
+                                    <h3>@Html.DisplayFor(x => a.Number)</h3>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="card-body text-center">
-                            <p class="card-text">内存 : 4G</p>
-                        </div>
-                        <div class="card-data">
-                            <ul>
-                                <li><i class="fa fa-clock-o"></i> 2017-10-13</li>
-                                <li><a href="#"><i class="fa fa-plus"></i></a></li>
-                                <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
-                            </ul>
+                            <div class="card-body text-center">
+                                <p class="card-text">@Html.DisplayFor(x => a.Detail)</p>
+                            </div>
+                            <div class="card-data">
+                                <ul>
+                                    <li><i class="fa fa-clock-o"></i> @Html.DisplayFor(x => a.Date)</li>
+                                    <li><a href="#"><i class="fa fa-plus"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }           
             <div class="col-sm-3">
                 <div class="panel">
                     <div class="card card-cascade">
@@ -56,7 +60,6 @@
         </div>
         <div class="panel-body">
             <div class="col-sm-3">
-                <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
                         <h3>硒鼓</h3>

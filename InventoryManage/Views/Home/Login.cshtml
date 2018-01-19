@@ -1,0 +1,39 @@
+﻿@model InventoryManage.Models.LoginViewModel
+@{
+    ViewData["Title"] = "登录";
+}
+
+<form class="form-signin" asp-action="Login" method="post">
+    <div class="form-signin-heading text-center">
+        <img src="" alt="" />
+    </div>
+    <div class="login-wrap">
+        <input asp-for="UserName" class="form-control" placeholder="@Html.DisplayNameFor(m => m.UserName)" autofocus />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+        <input asp-for="Password" class="form-control" placeholder="@Html.DisplayNameFor(m => m.Password)" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+
+        <button class="btn btn-lg btn-login btn-block" type="submit">
+            <i class="fa fa-check"></i>
+        </button>
+
+        <div class="registration">
+            还没有登录名?
+            <a class="" href="#">
+                注册
+            </a>
+        </div>
+        <label class="checkbox">
+            <input asp-for="RememberMe"> @Html.DisplayNameFor(m => m.RememberMe)
+            <span class="pull-right">
+                <a href="#"> 忘记密码?</a>
+            </span>
+        </label>
+
+    </div>
+
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -250,7 +250,70 @@ body > section {
         padding-bottom: 0;
     }
 
+/*************************
+******* Login Page ******
+**************************/
 
+.form-signin {
+    max-width: 330px;
+    margin: 100px auto;
+    background: #fff;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+    .form-signin .form-signin-heading {
+        margin: 0;
+        padding: 25px 15px;
+        text-align: center;
+        color: #fff;
+        position: relative;
+    }
+    .form-signin input[type="text"], .form-signin input[type="password"] {
+        margin-bottom: 15px;
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border: 1px solid #eaeaec;
+        background: #eaeaec;
+        box-shadow: none;
+        font-size: 12px;
+    }
+    .form-signin .btn-login {
+        background: #6bc5a4;
+        color: #fff;
+        text-transform: uppercase;
+        font-weight: normal;
+        font-family: 'Open Sans', sans-serif;
+        margin: 20px 0 5px;
+        padding: 5px;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+        font-size: 30px;
+    }
+    .form-signin .checkbox {
+        font-weight: normal;
+        color: #337ab7;
+        font-weight: normal;
+        font-family: 'Open Sans', sans-serif;
+        position: absolute;
+        bottom: -50px;
+        width: 100%;
+        left: 0;
+        margin-bottom: 14px;
+        font-size: 13px;
+    }
+        .form-signin .checkbox a, .form-signin .checkbox a:hover {
+            color: #fff;
+        }
+.login-wrap {
+    padding: 20px;
+    position: relative;
+}
+.registration {
+    color: #c7c7c7;
+    text-align: center;
+    margin-top: 15px;
+}
 /*************************
 *******Home Page******
 **************************/
