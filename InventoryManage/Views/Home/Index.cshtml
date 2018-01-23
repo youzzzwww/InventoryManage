@@ -12,7 +12,7 @@
             <span class="panel-title"> 资产设备</span>
         </div>
         <div class="panel-body">
-            @foreach (var a in Model.assetViewModel)
+            @foreach (var a in Model.AssetViewModel)
             {
                 <div class="col-sm-3">
                     <div class="panel">
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-            }           
+            }
             <div class="col-sm-3">
                 <div class="panel">
                     <div class="card card-cascade">
@@ -59,23 +59,26 @@
             <span class="panel-title"> 耗材</span>
         </div>
         <div class="panel-body">
-            <div class="col-sm-3">
-                <div class="small-box bg-aqua">
-                    <div class="inner">
-                        <h3>硒鼓</h3>
-                        <p>LaserJet 12A</p>
-                    </div>
-                    <div class="icon">
-                        <h3>5</h3>
-                    </div>
-                    <div class="small-box-footer">
-                        <ul>
-                            <li><i class="fa fa-clock-o"></i> 2018-01-08</li>
-                            <li><a href="#"><i class="fa fa-plus"></i></a></li>
-                        </ul>
+            @foreach (var a in Model.ConsumableViewModel)
+            {
+                <div class="col-sm-3">
+                    <div class="small-box bg-aqua">
+                        <div class="inner">
+                            <h3>@Html.DisplayFor(x => a.Category)</h3>
+                            <p>@Html.DisplayFor(x => a.Name)</p>
+                        </div>
+                        <div class="icon">
+                            <h3>@Html.DisplayFor(x => a.Number)</h3>
+                        </div>
+                        <div class="small-box-footer">
+                            <ul>
+                                <li><i class="fa fa-clock-o"></i> @Html.DisplayFor(x => a.Date)</li>
+                                <li><a href="#"><i class="fa fa-plus"></i></a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
             <div class="col-sm-3">
                 <div class="small-box text-center">
                     <a asp-controller="Invoice" asp-action="Add"><i class="fa fa-plus-square fa-5x"></i></a>
@@ -92,61 +95,35 @@
             <span class="panel-title"> 申领记录</span>
         </div>
         <div class="panel-body">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>日期</th>
-                        <th>种类</th>
-                        <th>型号</th>
-                        <th>数量</th>
-                        <th>申请理由</th>
-                        <th>状态</th>
-                        <th>审批意见</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2017-07-11</td>
-                        <td>硒鼓</td>
-                        <td>LaserJet 12A</td>
-                        <td>2</td>
-                        <td></td>
-                        <td><span class="label label-success">通过</span></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2017-08-11</td>
-                        <td>台式机</td>
-                        <td>GX 620</td>
-                        <td>1</td>
-                        <td>测试</td>
-                        <td><span class="label label-warning">未审批</span></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2017-08-11</td>
-                        <td>台式机</td>
-                        <td>optiplex 7040</td>
-                        <td>1</td>
-                        <td>测试</td>
-                        <td><span class="label label-danger">拒绝</span></td>
-                        <td>库存不足</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="dataTables_info">1到10，共57条记录</div>
-            <div class="dataTables_paginate">
-                <ul>
-                    <li class="prev disabled"><a href="#"><i class="fa fa-arrow-left"></i> 前一页</a></li>
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li class="next"><a href="#">后一页 <i class="fa fa-arrow-right"></i></a></li>
-                </ul>
+            <div id="invoice_partial">
+                @await Html.PartialAsync("PersonalInvoicePartial", Model.InvoiceList)
             </div>
-        </div>
+            <div class="dataTables_paginate" id="indexPagination"></div>
+        </div>        
     </div>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#indexPagination').pagination({
+                items: @Model.InvoiceList.TotalItems,
+                itemsOnPage: @Model.InvoiceList.PageSize,
+                pages: @Model.InvoiceList.TotalPages,
+                cssStyle: '',
+                prevText: '<i class="fa fa-arrow-left"></i>',
+                nextText: '<i class="fa fa-arrow-right"></i>',
+                onPageClick: function (pageNumber) {
+                    $.ajax({
+                        url: "@Url.Action("InvoiceList", "Home")",
+                        type: "GET",
+                        data: "pageSize=" + this.itemsOnPage + "&page=" + pageNumber,
+                        success: function (htm) {
+                            $('#invoice_partial').html(htm);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

@@ -490,27 +490,28 @@ body > section {
         list-style: none;
         display: inline;
     }
-
-        .dataTables_paginate li.disabled a {
+        .dataTables_paginate li.disabled span{
             color: #c7c7c7;
         }
-
         .dataTables_paginate li a {
             color: #797979;
             padding: 5px 10px;
             display: inline-block;
         }
-
         .dataTables_paginate li:hover, .dataTables_paginate li.active {
             border-color: #65cea7;
         }
-
+        .dataTables_paginate li span {
+            color: #797979;
+            padding: 5px 10px;
+            display: inline-block;
+        }
 /***********************
 ***** Request Page *****
 ************************/
-.widget-container {
-    margin-top: 10px;
-}
+        .widget-container {
+            margin-top: 10px;
+        }
 
 legend {
     color: #999999;

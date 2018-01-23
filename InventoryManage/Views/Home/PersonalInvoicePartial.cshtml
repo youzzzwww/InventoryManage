@@ -1,0 +1,53 @@
+﻿@model InventoryManage.Models.PaginatedList<InventoryManage.Models.InvoiceViewModel>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Date)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Category)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Name)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Number)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Reason)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Status)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().ApproveReason)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(i => item.Date)</td>
+                <td>@Html.DisplayFor(i => item.Category)</td>
+                <td>@Html.DisplayFor(i => item.Name)</td>
+                <td>@Html.DisplayFor(i => item.Number)</td>
+                <td>@Html.DisplayFor(i => item.Reason)</td>
+                <td>
+                    @{ var statusStyle = "label-warning";
+                        if (item.Status == InvoiceStatus.通过)
+                        {
+                            statusStyle = "label-success";
+                        }
+                        else if (item.Status == InvoiceStatus.未处理)
+                        {
+                            statusStyle = "label-warning";
+
+                        }
+                        else if (item.Status == InvoiceStatus.拒绝)
+                        {
+                            statusStyle = "label-danger";
+
+                        }
+                    }
+                    <span class="label @statusStyle">
+                        @Html.DisplayFor(i => item.Status)
+                    </span>
+                </td>
+                <td>@Html.DisplayFor(i => item.ApproveReason)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="dataTables_info">@Model.StartItem 到 @Model.EndItem ，共 @Model.TotalItems 条记录</div>
+
+

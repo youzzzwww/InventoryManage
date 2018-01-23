@@ -10,11 +10,19 @@ namespace InventoryManage.Models
     {
         public int PageIndex { get; private set; }
         public int TotalPages { get; private set; }
+        public int TotalItems { get; private set; }
+        public int PageSize { get; private set; }
+        public int StartItem { get; private set; }
+        public int EndItem { get; private set; }
 
         public PaginatedList() { }
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
+            TotalItems = count;
+            PageSize = pageSize;
+            StartItem = (PageIndex-1) * PageSize + 1;
+            EndItem = PageIndex * PageSize > TotalItems ? TotalItems : PageIndex * PageSize;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
 
             this.AddRange(items);

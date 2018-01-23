@@ -62,9 +62,20 @@ namespace InventoryManage.Data
 
             var invoices = new Invoice[]
             {
-                new Invoice{WorkerId=workers.Single(w => w.UserName=="xiesongbo").Id, Date=DateTime.Now, Number =1, Status=InvoiceStatus.通过,
+                new Invoice{WorkerId=workers.Single(w => w.UserName=="xiesongbo").Id, Date=DateTime.Parse("2017-08-01"), Number =1, Status=InvoiceStatus.通过,
                     Reason="新机测试", EquipmentId=equipments.Single(e => e.Name=="Dell optiplex 7040").EquipmentId,
-                    ApproverId=workers.Single(w => w.UserName=="xiesongbo").Id, ApproveDate=DateTime.Now},
+                    ApproverId=workers.Single(w => w.UserName=="xiesongbo").Id, ApproveDate=DateTime.Parse("2017-08-01")},
+                new Invoice{WorkerId=workers.Single(w => w.UserName=="xiesongbo").Id, Date=DateTime.Parse("2017-06-01"), Number =1, Status=InvoiceStatus.通过,
+                    Reason="原始机器", EquipmentId=equipments.Single(e => e.Name=="Dell optiplex 7040").EquipmentId,
+                    ApproverId=workers.Single(w => w.UserName=="xiesongbo").Id, ApproveDate=DateTime.Parse("2017-06-01")},
+                new Invoice{WorkerId=workers.Single(w => w.UserName=="xiesongbo").Id, Date=DateTime.Now, Number =1, Status=InvoiceStatus.拒绝,
+                    Reason="原始机器", EquipmentId=equipments.Single(e => e.Name=="Dell optiplex 7040").EquipmentId,
+                    ApproverId=workers.Single(w => w.UserName=="xiesongbo").Id, ApproveReason="库存不足", ApproveDate=DateTime.Now},
+                new Invoice{WorkerId=workers.Single(w => w.UserName=="xiesongbo").Id, Date=DateTime.Parse("2018-01-01"), Number =1, Status=InvoiceStatus.通过,
+                    Reason="", EquipmentId=equipments.Single(e => e.Name=="HP LaserJet 05A").EquipmentId,
+                    ApproverId=workers.Single(w => w.UserName=="xiesongbo").Id, ApproveDate=DateTime.Parse("2018-01-01")},
+                new Invoice{WorkerId=workers.Single(w => w.UserName=="xiesongbo").Id, Date=DateTime.Now,Number =1, Status=InvoiceStatus.未处理,
+                    EquipmentId=equipments.Single(e => e.Name=="HP LaserJet 05A").EquipmentId},
                 new Invoice{WorkerId=workers.Single(w => w.UserName=="maiweixian").Id, Date=DateTime.Now,Number =1, Status=InvoiceStatus.未处理,
                     EquipmentId=equipments.Single(e => e.Name=="HP LaserJet 05A").EquipmentId}
             };

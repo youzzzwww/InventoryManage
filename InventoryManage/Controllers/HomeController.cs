@@ -29,15 +29,67 @@ namespace InventoryManage.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var assets = from wk in _context.Workers.Where(w => w.Id == user.Id)
-                         from iv in _context.Invoices.Where(i => i.WorkerId == wk.Id && i.Status == InvoiceStatus.通过)
-                            group iv by new { Id = iv.EquipmentId, Date = iv.ApproveDate } into ivg
-                         from eqp in _context.Equipments.Where(e => e.EquipmentId == ivg.Key.Id)
+            var assetsQuery = from iv in _context.Invoices.Where(i => i.WorkerId == user.Id && i.Status == InvoiceStatus.通过)
+                                group iv by iv.EquipmentId into ivg
+                              from eqp in _context.Equipments.Where(e => e.EquipmentId == ivg.Key && e.Type == EquipmentType.固定资产)
                          select new AssetViewModel
                          {
-                             
+                             EquipmentId = eqp.EquipmentId,
+                             Category = eqp.Category,
+                             Name = eqp.Name,
+                             Detail = eqp.Detail,
+                             Number = ivg.Sum(x => x.Number),
+                             Date = ivg.Max(x => x.Date)
                          };
-            return View();
+            var consumablesQuery = from iv in _context.Invoices.Where(i => i.WorkerId == user.Id && i.Status == InvoiceStatus.通过)
+                                   group iv by iv.EquipmentId into ivg
+                                   from eqp in _context.Equipments.Where(e => e.EquipmentId == ivg.Key && e.Type == EquipmentType.耗材)
+                                   select new ConsumableViewModel
+                                   {
+                                       EquipmentId = eqp.EquipmentId,
+                                       Category = eqp.Category,
+                                       Name = eqp.Name,
+                                       Number = ivg.Sum(x => x.Number),
+                                       Date = ivg.Max(x => x.Date)
+                                   };
+            var invoiceQuery = from iv in _context.Invoices.Where(i => i.WorkerId == user.Id)
+                               from eqp in _context.Equipments.Where(e => e.EquipmentId == iv.EquipmentId)
+                               select new InvoiceViewModel
+                               {
+                                   Category = eqp.Category,
+                                   Name = eqp.Name,
+                                   Number = iv.Number,
+                                   Date = iv.Date,
+                                   Reason = iv.Reason,
+                                   Status = iv.Status,
+                                   ApproveReason = iv.ApproveReason
+                               };
+            var personalIndexViewModel = new PersonalIndexViewModel
+            {
+                AssetViewModel = await assetsQuery.ToListAsync(),
+                ConsumableViewModel = await consumablesQuery.ToListAsync(),
+                InvoiceList = await PaginatedList<InvoiceViewModel>.CreateAsync(invoiceQuery, 1, 3)
+            };
+            return View(personalIndexViewModel);
+        }
+
+        public async Task<IActionResult> InvoiceList(int? page, int? pageSize)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var invoiceQuery = from iv in _context.Invoices.Where(i => i.WorkerId == user.Id)
+                               from eqp in _context.Equipments.Where(e => e.EquipmentId == iv.EquipmentId)
+                               select new InvoiceViewModel
+                               {
+                                   Category = eqp.Category,
+                                   Name = eqp.Name,
+                                   Number = iv.Number,
+                                   Date = iv.Date,
+                                   Reason = iv.Reason,
+                                   Status = iv.Status,
+                                   ApproveReason = iv.ApproveReason
+                               };
+            var invoiceList = await PaginatedList<InvoiceViewModel>.CreateAsync(invoiceQuery, page??1, pageSize??10);
+            return PartialView("PersonalInvoicePartial", invoiceList);
         }
 
         public IActionResult About()
@@ -58,6 +110,10 @@ namespace InventoryManage.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (_signInManager.IsSignedIn(HttpContext.User))
+            {
+                return RedirectToAction(nameof(HomeController.Index));
+            }
             return View();
         }
         // POST: /Home/Login
