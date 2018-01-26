@@ -50,7 +50,8 @@ namespace InventoryManage.Data
 
             var equipments = new Equipment[]
             {
-                new Equipment{Type=EquipmentType.固定资产, Category="台式机", Name="Dell optiplex 7040", Detail="内存:4G;CPU:i7", Number=5},              
+                new Equipment{Type=EquipmentType.固定资产, Category="台式机", Name="Dell optiplex 7040", Detail="内存:4G;CPU:i7", Number=5},
+                new Equipment{Type=EquipmentType.固定资产, Category="台式机", Name="Dell GX520", Detail="内存:2G", Number=2},
                 new Equipment{Type=EquipmentType.固定资产, Category="打印机",Name="HP Color LaserJet CP5520", Detail="", Number=0},
                 new Equipment{Type=EquipmentType.耗材, Category="硒鼓",Name="HP LaserJet 05A", Detail="", Number=100}
             };

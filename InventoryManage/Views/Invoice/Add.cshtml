@@ -1,4 +1,6 @@
-﻿@{
+﻿@model InventoryManage.Models.Invoice
+
+@{
     ViewData["Title"] = "申请设备";
 }
 
@@ -6,9 +8,18 @@
     <fieldset title="设备种类" class="step">
         <legend>选择种类</legend>
         <div class="stepy-tab">
-            <ul class="stepy-titles clearfix">
-                <li class="current-step"><div>台式机</div></li>
-                <li><div>硒鼓</div></li>
+            <ul class="stepy-titles clearfix" id="category_ul">
+                @if (Model.Equipment != null)
+                {
+                    <li class="current-step">@Model.Equipment.Category</li>
+                }
+                else
+                {
+                    foreach (var c in ViewBag.CategoryList)
+                    {
+                        <li>@c</li>
+                    }
+                }
             </ul>
         </div>
     </fieldset>
@@ -18,9 +29,11 @@
     <fieldset title="设备型号" class="step">
         <legend>选择型号</legend>
         <div class="stepy-tab">
-            <ul class="stepy-titles clearfix">
-                <li class="current-step"><div>optiplex 7040</div></li>
-                <li><div>GX 620</div></li>
+            <ul class="stepy-titles clearfix" id="name_ul">
+                @if (Model.Equipment != null)
+                {
+                    <li class="current-step">@Model.Equipment.Name</li>
+                }
             </ul>
         </div>
     </fieldset>
@@ -30,41 +43,92 @@
     <fieldset title="详细信息" class="step">
         <legend>选择设备</legend>
         <div class="stepy-tab">
-            <ul class="stepy-titles clearfix">
-                <li class="current-step">
-                    <span>CPU:i7-6700</span>
-                    <span>内存:8G</span>
-                </li>
+            <ul class="stepy-titles clearfix" id="detail_ul">
+                @if (Model.Equipment != null)
+                {
+                    <li class="current-step">@Model.Equipment.Detail</li>
+                }
             </ul>
         </div>
     </fieldset>
 </div>
 
-<div class="widget-container">
-    <fieldset title="申请理由" class="step">
-        <legend>申请原因</legend>
-        <div class="col-sm-5">
-            <textarea class="form-control" placeholder="申请理由" rows="3"></textarea>
-        </div>
-    </fieldset>
-</div>
+<form asp-action="Add" method="post">
+    <input asp-for="EquipmentId" type="hidden" />
 
-<div class="widget-container">
-    <fieldset title="申请数量" class="step">
-        <legend>数量</legend>
-        <div class="col-sm-5">
-            <input type="number" min="1" max="10" value="1" />
-        </div>
-    </fieldset>
-</div>
+    <div class="widget-container">
+        <fieldset title="申请理由" class="step">
+            <legend>申请原因</legend>
+            <div class="col-sm-5">
+                <textarea asp-for="Reason" class="form-control" placeholder="申请理由" rows="3"></textarea>
+                <span asp-validation-for="Reason"></span>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="widget-container">
+        <fieldset title="申请数量" class="step">
+            <legend>数量</legend>
+            <div class="col-sm-5">
+                <input asp-for="Number" value="1" />
+                <span asp-validation-for="Number"></span>
+            </div>
+        </fieldset>
+    </div>
 
 
-<div class="widget-container">
-    <fieldset title="" class="step">
-        <legend></legend>
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> 申请</button>
-            <button type="reset" class="btn"><i class="fa fa-times"></i> 取消</button>
-        </div>
-    </fieldset>
-</div>
+    <div class="widget-container">
+        <fieldset title="" class="step">
+            <legend></legend>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> 申请</button>
+                <button type="reset" class="btn"><i class="fa fa-times"></i> 取消</button>
+            </div>
+        </fieldset>
+    </div>
+</form>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $("ul#category_ul > li").not(".current-step").click(function () {
+            $("ul#category_ul > li.current-step").removeClass("current-step");
+            $(this).addClass("current-step");
+            $.ajax({
+                url: "@Url.Action("GetNames", "Invoice")",
+                type: "GET",
+                data: "category=" + $(this).html(),
+                dataType: 'json',
+                success: function (htm) {
+                    $('#name_ul').empty();
+                    $.each(htm, function (index, element) {
+                        $('#name_ul').append('<li>' + element + '</li>');
+                    });
+                }
+            });
+        });
+        $(document).on('click', "ul#name_ul > li:not(.current-step)", function () {
+            $("ul#name_ul > li.current-step").removeClass("current-step");
+            $(this).addClass("current-step");
+            $.ajax({
+                url: "@Url.Action("GetDetailsAndId", "Invoice")",
+                type: "GET",
+                data: "category=" + $("ul#category_ul > li.current-step").html()
+                    + "&name=" + $(this).html(),
+                dataType: 'json',
+                success: function (htm) {
+                    $('#detail_ul').empty();
+                    $.each(htm, function (index, element) {
+                        $('#detail_ul').append('<li><div style="display:none">' + element["id"] + '</div>'
+                            + element["detail"] + '</li>');
+                    });
+                }
+            });
+        });
+        $(document).on('click', "ul#detail_ul > li:not(.current-step)", function () {
+            $("ul#detail_ul > li.current-step").removeClass("current-step");
+            $(this).addClass("current-step");
+            $('#EquipmentId').val($(this).children('div').html());
+        });
+    </script>
+}

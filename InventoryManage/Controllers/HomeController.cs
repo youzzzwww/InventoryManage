@@ -54,6 +54,7 @@ namespace InventoryManage.Controllers
                                    };
             var invoiceQuery = from iv in _context.Invoices.Where(i => i.WorkerId == user.Id)
                                from eqp in _context.Equipments.Where(e => e.EquipmentId == iv.EquipmentId)
+                               orderby iv.Date descending
                                select new InvoiceViewModel
                                {
                                    Category = eqp.Category,
@@ -78,6 +79,7 @@ namespace InventoryManage.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var invoiceQuery = from iv in _context.Invoices.Where(i => i.WorkerId == user.Id)
                                from eqp in _context.Equipments.Where(e => e.EquipmentId == iv.EquipmentId)
+                               orderby iv.Date descending
                                select new InvoiceViewModel
                                {
                                    Category = eqp.Category,

@@ -31,7 +31,7 @@
                             <div class="card-data">
                                 <ul>
                                     <li><i class="fa fa-clock-o"></i> @Html.DisplayFor(x => a.Date)</li>
-                                    <li><a href="#"><i class="fa fa-plus"></i></a></li>
+                                    <li><a asp-controller="Invoice" asp-action="Add" asp-route-equipmentId="@a.EquipmentId"><i class="fa fa-plus"></i></a></li>
                                     <li><a href="#"><i class="fa fa-trash-o"></i></a></li>
                                 </ul>
                             </div>
@@ -73,7 +73,7 @@
                         <div class="small-box-footer">
                             <ul>
                                 <li><i class="fa fa-clock-o"></i> @Html.DisplayFor(x => a.Date)</li>
-                                <li><a href="#"><i class="fa fa-plus"></i></a></li>
+                                <li><a asp-controller="Invoice" asp-action="Add" asp-route-equipmentId="@a.EquipmentId"><i class="fa fa-plus"></i></a></li>
                             </ul>
                         </div>
                     </div>

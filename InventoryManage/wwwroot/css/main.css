@@ -509,9 +509,9 @@ body > section {
 /***********************
 ***** Request Page *****
 ************************/
-        .widget-container {
-            margin-top: 10px;
-        }
+.widget-container {
+    margin-top: 10px;
+}
 
 legend {
     color: #999999;
