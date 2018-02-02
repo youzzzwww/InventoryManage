@@ -654,6 +654,18 @@ table thead .sorting, table thead .sorting_asc, table thead .sorting_desc, table
     }
 
 /***********************
+********* Modal ******
+************************/
+
+.modal-header {
+    background: #999999;
+    color: #fff;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    border: none;
+}
+
+/***********************
 ********* Footer ******
 ************************/
 #bottom {
