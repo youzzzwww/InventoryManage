@@ -10,7 +10,6 @@ namespace InventoryManage.Models
         public Worker()
         {
             EnrollmentDate = DateTime.Now;
-            Disabled = false;
         }     
     
         [DataType(DataType.Date)]
@@ -22,7 +21,8 @@ namespace InventoryManage.Models
         [StringLength(50, ErrorMessage = "姓名不能超过50个字符")]
         public string Name { get; set; }
         [Required]
-        public bool Disabled { get; set; }
+        [Display(Name = "是否在职")]
+        public bool IsStaff { get; set; }
         [Display(Name = "部门")]
         public String Department { get; set; }
 

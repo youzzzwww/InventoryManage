@@ -1,12 +1,12 @@
-﻿@model  PaginatedList<Equipment>
-
+﻿@model PaginatedList<WorkerWithRole>
 <table class="table table-bordered adv-table" id="dynamic-table">
     <thead>
         <tr role="row">
-            <th class="sorting" role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Category)</th>
-            <th class="" role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Name)</th>
-            <th class="" role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Number)</th>
-            <th class="" role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Detail)</th>
+            <th class="sorting" role="columnheader" aria-controls="dynamic-table">登录名</th>
+            <th role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Worker.Name)</th>
+            <th role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Worker.Department)</th>
+            <th role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Worker.IsStaff)</th>
+            <th role="columnheader" aria-controls="dynamic-table">@Html.DisplayNameFor(x => Model.FirstOrDefault().Roles)</th>
             <th role="columnheader" aria-controls="dynamic-table" style="width:200px"></th>
         </tr>
     </thead>
@@ -15,10 +15,11 @@
         @for (var i = 0; i < Model.Count(); ++i)
         {
             <tr class="odd">
-                <td>@Html.DisplayFor(x => Model[i].Category)</td>
-                <td>@Html.DisplayFor(x => Model[i].Name)</td>
-                <td>@Html.DisplayFor(x => Model[i].Number)</td>
-                <td>@Html.DisplayFor(x => Model[i].Detail)</td>
+                <td>@Html.DisplayFor(x => Model[i].Worker.UserName)</td>
+                <td>@Html.DisplayFor(x => Model[i].Worker.Name)</td>
+                <td>@Html.DisplayFor(x => Model[i].Worker.Department)</td>
+                <td>@Html.DisplayFor(x => Model[i].Worker.IsStaff)</td>
+                <td>@Html.DisplayFor(x => Model[i].Roles)</td>
                 <td class="center">
                     <a href="#modal_edit_@i" data-toggle="modal" class="btn btn-info"><i class="fa fa-edit"></i> 修改</a>
                     <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal_edit_@i" class="modal fade">
@@ -26,48 +27,46 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times"></i></button>
-                                    <h3 class="modal-title">修改设备</h3>
+                                    <h3 class="modal-title">修改人员</h3>
                                 </div>
                                 <div class="modal-body">
 
                                     <form asp-action="Edit" class="form-horizontal" method="post">
-                                        <input asp-for="@Model[i].EquipmentId" name="EquipmentId" type="hidden" />
+                                        <input asp-for="@Model[i].Worker.Id" name="Worker.Id" type="hidden" />
                                         <div class="form-group">
-                                            <label asp-for="@Model[i].Type" class="col-sm-2 control-label"></label>
+                                            <label class="col-sm-2 control-label">登录名</label>
                                             <div class="col-sm-10">
-                                                <select asp-for="@Model[i].Type" name="Type" asp-items="@Html.GetEnumSelectList<InventoryManage.Models.EquipmentType>()" class="form-control"></select>
-                                                <span asp-validation-for="@Model[i].Type" class="text-danger"></span>
+                                                <input asp-for="@Model[i].Worker.UserName" name="Worker.UserName" class="form-control" />
+                                                <span asp-validation-for="@Model[i].Worker.UserName" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label asp-for="@Model[i].Category" class="col-md-2 control-label"></label>
+                                            <label asp-for="@Model[i].Worker.Name" class="col-md-2 control-label"></label>
                                             <div class="col-md-10">
-                                                <input asp-for="@Model[i].Category" name="Category" list="CategoryList_@i" class="form-control" />
-                                                <datalist id="CategoryList_@i" name="CategoryList"></datalist>
-                                                <span asp-validation-for="@Model[i].Category" class="text-danger"></span>
+                                                <input asp-for="@Model[i].Worker.Name" name="Worker.Name" class="form-control" />
+                                                <span asp-validation-for="@Model[i].Worker.Name" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label asp-for="@Model[i].Name" class="col-md-2 control-label"></label>
+                                            <label asp-for="@Model[i].Worker.Department" class="col-md-2 control-label"></label>
                                             <div class="col-md-10">
-                                                <input asp-for="@Model[i].Name" name="Name" list="NameList_@i" class="form-control" />
-                                                <datalist id="NameList_@i" name="NameList"></datalist>
-                                                <span asp-validation-for="@Model[i].Name" class="text-danger"></span>
+                                                <input asp-for="@Model[i].Worker.Department" name="Worker.Department" list="DepartmentList_@i" class="form-control" />
+                                                <datalist id="DepartmentList_@i" name="DepartmentList"></datalist>
+                                                <span asp-validation-for="@Model[i].Worker.Department" class="text-danger"></span>
                                             </div>
-                                        </div>
+                                        </div> 
                                         <div class="form-group">
-                                            <label asp-for="@Model[i].Detail" class="col-md-2 control-label"></label>
+                                            <label asp-for="@Model[i].Worker.IsStaff" class="col-md-2 control-label"></label>
                                             <div class="col-md-10">
-                                                <input asp-for="@Model[i].Detail" name="Detail" list="DetailList_@i" class="form-control" />
-                                                <datalist id="DetailList_@i" name="DetailList"></datalist>
-                                                <span asp-validation-for="@Model[i].Detail" class="text-danger"></span>
+                                                <input asp-for="@Model[i].Worker.IsStaff" name="Worker.IsStaff" class="form-control" />
+                                                <span asp-validation-for="@Model[i].Worker.IsStaff" class="text-danger"></span>
                                             </div>
-                                        </div>
+                                        </div>      
                                         <div class="form-group">
-                                            <label asp-for="@Model[i].Number" class="col-md-2 control-label"></label>
+                                            <label asp-for="@Model[i].Roles" class="col-md-2 control-label"></label>
                                             <div class="col-md-10">
-                                                <input asp-for="@Model[i].Number" name="Number" class="form-control" />
-                                                <span asp-validation-for="@Model[i].Number" class="text-danger"></span>
+                                                <select asp-for="@Model[i].Roles" name="Roles" asp-items="@Model[i].RoleList" data-role="multiselect"></select>
+                                                <span asp-validation-for="@Model[i].Roles" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -88,13 +87,13 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times"></i></button>
-                                    <h3 class="modal-title">删除设备</h3>
+                                    <h3 class="modal-title">删除人员</h3>
                                 </div>
                                 <div class="modal-body">
                                     <form asp-action="Delete" class="form-horizontal" method="post">
-                                        <input asp-for="@Model[i].EquipmentId" name="EquipmentId" type="hidden" />
+                                        <input asp-for="@Model[i].Worker.Id" name="Id" type="hidden" />
                                         <div class="form-group">
-                                            确认删除 @Html.DisplayFor(x => Model[i].Name) ？
+                                            确认删除 @Html.DisplayFor(x => Model[i].Worker.Name) ？
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-offset-2 col-sm-2">
@@ -106,7 +105,6 @@
                             </div>
                         </div>
                     </div>
-
                 </td>
             </tr>
         }

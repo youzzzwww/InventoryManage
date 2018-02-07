@@ -1,4 +1,5 @@
-﻿
+﻿@model WorkerIndexViewModel
+
 @{
     ViewData["Title"] = "所有员工";
 }
@@ -14,66 +15,145 @@
             <div class="dataTables_wrapper">
                 <div class="span6">
                     <div class="dataTables_length">
-                        <button class="btn btn-primary"><i class="fa fa-plus"></i> 新建</button>
+                        <a href="#modal_add" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"></i> 新建</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal_add" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times"></i></button>
+                                        <h3 class="modal-title">添加人员</h3>
+                                    </div>
+                                    <div class="modal-body">
+
+                                        <form asp-action="Add" class="form-horizontal" method="post">
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">登录名</label>
+                                                <div class="col-sm-10">
+                                                    <input asp-for="@Model.WorkerAdd.Worker.UserName" name="Worker.UserName" class="form-control" />
+                                                    <span asp-validation-for="@Model.WorkerAdd.Worker.UserName" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">密码</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" name="Password" class="form-control" />
+                                                    <span asp-validation-for="@Model.WorkerAdd.Worker.PasswordHash" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model.WorkerAdd.Worker.Name" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="@Model.WorkerAdd.Worker.Name" name="Worker.Name" class="form-control" />
+                                                    <span asp-validation-for="@Model.WorkerAdd.Worker.Name" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model.WorkerAdd.Worker.Department" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="@Model.WorkerAdd.Worker.Department" name="Worker.Department" list="DepartmentList" class="form-control" />
+                                                    <datalist id="DepartmentList" name="DepartmentList"></datalist>
+                                                    <span asp-validation-for="@Model.WorkerAdd.Worker.Department" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model.WorkerAdd.Worker.IsStaff" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="@Model.WorkerAdd.Worker.IsStaff" name="Worker.IsStaff" class="form-control" />
+                                                    <span asp-validation-for="@Model.WorkerAdd.Worker.IsStaff" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model.WorkerAdd.Roles" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <select asp-for="@Model.WorkerAdd.Roles" name="Roles" asp-items="@Model.WorkerAdd.RoleList" data-role="multiselect"></select>
+                                                    <span asp-validation-for="@Model.WorkerAdd.Roles" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-2">
+                                                    <button class="btn btn-info" type="submit"><i class="fa fa-edit"></i> 确认</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="span6">
                     <div class="dataTables_filter">
-                        <label>搜索: <input type="text" class="form-control" aria-controls="dynamic-table"></label>
+                        <input type="text" id="ipt_search" aria-controls="dynamic-table" />
+                        <button class="btn" id="btn_search"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
-                <table class="table table-bordered adv-table" id="dynamic-table">
-                    <thead>
-                        <tr role="row">
-                            <th class="sorting_desc" role="columnheader" aria-controls="dynamic-table">登录名</th>
-                            <th class="sorting" role="columnheader" aria-controls="dynamic-table">姓名</th>
-                            <th class="sorting" role="columnheader" aria-controls="dynamic-table">部门</th>
-                            <th class="sorting" role="columnheader" aria-controls="dynamic-table">职务</th>
-                            <th class="sorting" role="columnheader" aria-controls="dynamic-table">角色</th>
-                            <th role="columnheader" aria-controls="dynamic-table" style="width:200px"></th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr class="odd">
-                            <td>xiesongbo</td>
-                            <td>谢松波</td>
-                            <td>信息部</td>
-                            <td>普通员工</td>
-                            <td>Admin</td>
-                            <td class="center">
-                                <button class="btn btn-info" type="button"><i class="fa fa-edit"></i> 修改</button>
-                                <button class="btn btn-danger" type="button"><i class="fa fa-trash-o"></i> 删除</button>
-                            </td>
-                        </tr>
-                        <tr class="even">
-                            <td>maiweixian</td>
-                            <td>麦伟贤</td>
-                            <td>信息部</td>
-                            <td>普通员工</td>
-                            <td>Customer</td>
-                            <td class="center">
-                                <button class="btn btn-info" type="button"><i class="fa fa-edit"></i> 修改</button>
-                                <button class="btn btn-danger" type="button"><i class="fa fa-trash-o"></i> 删除</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="dataTables_info">1到10，共57条记录</div>
-                <div class="dataTables_paginate">
-                    <ul>
-                        <li class="prev disabled"><a href="#"><i class="fa fa-arrow-left"></i> 前一页</a></li>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li class="next"><a href="#">后一页 <i class="fa fa-arrow-right"></i></a></li>
-                    </ul>
+                <div id="workers_partial">
+                    @await Html.PartialAsync("WorkersPartial", Model.WorkerList)
                 </div>
+
+                <div class="dataTables_paginate" id="workersPagination"></div>
             </div>
         </div>
     </div>
 </div>
 
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#workersPagination').pagination({
+                items: @Model.WorkerList.TotalItems,
+                itemsOnPage: @Model.WorkerList.PageSize,
+                pages: @Model.WorkerList.TotalPages,
+                cssStyle: '',
+                prevText: '<i class="fa fa-arrow-left"></i>',
+                nextText: '<i class="fa fa-arrow-right"></i>',
+                onPageClick: function (pageNumber) {
+                    getWorkerList(pageNumber);
+                }
+            });
+        });
+
+        function getWorkerList(pageNum) {
+            $.ajax({
+                url: "@Url.Action("WorkerList", "Worker")",
+                type: "GET",
+                data: "pageSize=" + @Model.WorkerList.PageSize + "&page=" + pageNum + "&filter=" + $('#ipt_search').val(),
+                success: function (htm) {
+                    $('#workers_partial').html(htm);
+                    $("select[name=Roles]").multiselect();
+                    $('#workersPagination').pagination('updateItems', $('#items_update').html());
+                }
+            });
+        }
+        $(document).on('click', '#btn_search', function () {
+            getWorkerList(1)
+        });
+        $(document).on('keyup', '#ipt_search', function (e) {
+            if (e.keyCode == 13) {
+                getWorkerList(1);
+            }
+        });        
+
+        function showDepartmentList() {
+            var cur_group = $(this).parent();
+            var data_list = cur_group.find('datalist[name=DepartmentList]');;
+            $.ajax({
+                url: "@Url.Action("GetDepartmentList", "Worker")",
+                type: "GET",
+                data: { },
+                dataType: "json",
+                success: function (data) {
+                    data_list.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        data_list.append("<option value='" +
+                            data[i].department + "'>" + data[i].department +
+                            "</option>");
+                    }
+                }
+            });
+        }
+        $(document).on('input', 'input[name$=Department]', showDepartmentList);
+        $(document).one('click', 'input[name$=Department]', showDepartmentList);
+    </script>
+}
