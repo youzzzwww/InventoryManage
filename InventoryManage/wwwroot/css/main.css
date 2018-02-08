@@ -627,6 +627,11 @@ table thead .sorting, table thead .sorting_asc, table thead .sorting_desc, table
     padding: 8px 15px;
 }
 
+.panel-body input[type=checkbox] {
+    width: 1.5em;
+    height: 1.5em;
+}
+
 .custom-tab {
     background: #e0e1e7 !important;
     border-radius: 5px 5px 0 0;

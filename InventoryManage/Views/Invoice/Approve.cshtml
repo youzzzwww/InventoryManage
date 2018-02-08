@@ -1,4 +1,5 @@
-﻿
+﻿@model  PaginatedList<ApproveInvoiceViewModel>
+
 @{
     ViewData["Title"] = "设备审批";
 }
@@ -23,67 +24,20 @@
                 <div class="tab-pane active" id="all">
                     <div class="dataTables_length">
                         <div class="form-check">
-                            <input type="checkbox" /><label> 未审批</label>
+                            <input name="UnhandledCheck" type="checkbox"/><label>未审批</label>
                         </div>
                     </div>
                     <div class="span6">
                         <div class="dataTables_filter">
-                            <label>搜索: <input type="text" class="form-control" aria-controls="dynamic-table"></label>
+                            <input type="text" id="ipt_search" aria-controls="dynamic-table" />
+                            <button class="btn" id="btn_search"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>日期</th>
-                                <th>申请人</th>
-                                <th>种类</th>
-                                <th>型号</th>
-                                <th>数量</th>
-                                <th>申请理由</th>
-                                <th>审批意见</th>
-                                <th style="width:240px"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>2017-07-11</td>
-                                <td>麦伟贤</td>
-                                <td>硒鼓</td>
-                                <td>LaserJet 12A</td>
-                                <td>2</td>
-                                <td></td>
-                                <td></td>
-                                <td><span class="label label-success">已通过</span></td>
-                            </tr>
-                            <tr>
-                                <td>2017-08-11</td>
-                                <td>谢松波</td>
-                                <td>台式机</td>
-                                <td>optiplex 7040</td>
-                                <td>1</td>
-                                <td>测试</td>
-                                <td></td>
-                                <td>
-                                    <button class="btn btn-success" type="button"><i class="fa fa-check"></i> 同意</button>
-                                    <button class="btn btn-info" type="button"><i class="fa fa-edit"></i> 另选</button>
-                                    <button class="btn btn-danger" type="button"><i class="fa fa-times"></i> 拒绝</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="dataTables_info">1到10，共57条记录</div>
-                    <div class="dataTables_paginate">
-                        <ul>
-                            <li class="prev disabled"><a href="#"><i class="fa fa-arrow-left"></i> 前一页</a></li>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li class="next"><a href="#">后一页 <i class="fa fa-arrow-right"></i></a></li>
-                        </ul>
+                    
+                    <div id="invoices_partial">
+                        @await Html.PartialAsync("InvoicesPartial", Model)
                     </div>
+                    <div class="dataTables_paginate" id="invoicesPagination"></div>                    
                 </div>
 
                 <div class="tab-pane" id="assets">
@@ -96,3 +50,114 @@
         </div>
     </section>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#invoicesPagination').pagination({
+                items: @Model.TotalItems,
+                itemsOnPage: @Model.PageSize,
+                pages: @Model.TotalPages,
+                cssStyle: '',
+                prevText: '<i class="fa fa-arrow-left"></i>',
+                nextText: '<i class="fa fa-arrow-right"></i>',
+                onPageClick: function (pageNumber) {
+                    getInvoiceList(pageNumber);
+                }
+            });
+        });
+        function getInvoiceList(pageNum) {
+            $.ajax({
+                url: "@Url.Action("InvoiceList", "Invoice")",
+                type: "GET",
+                data: "pageSize=" + @Model.PageSize + "&page=" + pageNum + "&filter=" + $('#ipt_search').val()
+                + "&unhandled=" + $('input[name="UnhandledCheck"]').prop("checked"),
+                success: function (htm) {
+                    $('#invoices_partial').html(htm);
+                    $('#invoicesPagination').pagination('updateItems', $('#items_update').html());
+                }
+            });
+        }
+
+        $(document).on('click', '#btn_search', function () {
+            getInvoiceList(1)
+        });
+        $(document).on('keyup', '#ipt_search', function (e) {
+            if (e.keyCode == 13) {
+                getInvoiceList(1);
+            }
+        });
+        $('input[name="UnhandledCheck"]').change(function () {
+            getInvoiceList(1);
+        });
+
+        function showCategoryList() {
+            var cur_form = $(this).parent().parent().parent();
+            var data_list = cur_form.find('datalist[name=CategoryList]');;
+            $.ajax({
+                url: "@Url.Action("GetCategoryList", "Equipment")",
+                type: "GET",
+                data: { "type": cur_form.find('select[name$=Type]').val() },
+                dataType: "json",
+                success: function (data) {
+                    data_list.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        data_list.append("<option value='" +
+                            data[i].category + "'>" + data[i].category +
+                            "</option>");
+                    }
+                }
+            });
+        }
+        function showNameList() {
+            var cur_form = $(this).parent().parent().parent();
+            var name_list = cur_form.find('datalist[name=NameList]');
+            $.ajax({
+                url: "@Url.Action("GetNameList", "Equipment")",
+                type: "GET",
+                data: {
+                    "type": cur_form.find('select[name$=Type]').val(),
+                    "category": cur_form.find('input[name$=Category]').val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    name_list.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        name_list.append("<option value='" +
+                            data[i].name + "'>" + data[i].name +
+                            "</option>");
+                    }
+                }
+            })
+        }
+        function showDetailList() {
+            var cur_form = $(this).parent().parent().parent();
+            var detail_list = cur_form.find('datalist[name=DetailList]');
+            $.ajax({
+                url: "@Url.Action("GetDetailList", "Equipment")",
+                type: "GET",
+                data: {
+                    "type": cur_form.find('select[name$=Type]').val(),
+                    "category": cur_form.find('input[name$=Category]').val(),
+                    "name": $(this).val()
+                },
+                dataType: "json",
+                success: function (data) {
+                    detail_list.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        detail_list.append("<option value='" +
+                            data[i].detail + "'>" + data[i].detail +
+                            "</option>");
+                    }
+                }
+            })
+        }
+
+        $(document).on('input', 'input[name$=Category]', showCategoryList);
+        $(document).one('click', 'input[name$=Category]', showCategoryList);
+        $(document).on('input', 'input[name$=Name]', showNameList);
+        $(document).one('click', 'input[name$=Name]', showNameList);
+        $(document).on('input', 'input[name$=Detail]', showDetailList);
+        $(document).one('click', 'input[name$=Detail]', showDetailList);
+</script>
+}

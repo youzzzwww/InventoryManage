@@ -1,0 +1,169 @@
+﻿@model  PaginatedList<ApproveInvoiceViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Date)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Proposer)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Category)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Name)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Number)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().RemainNumber)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().Reason)</th>
+            <th>@Html.DisplayNameFor(x => Model.FirstOrDefault().ApproveReason)</th>
+            <th style="width:240px">@Html.DisplayNameFor(x => Model.FirstOrDefault().Status)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (var i = 0; i < Model.Count(); ++i)
+        {
+            <tr>
+                <td>@Html.DisplayFor(x => Model[i].Date)</td>
+                <td>@Html.DisplayFor(x => Model[i].Proposer)</td>
+                <td>@Html.DisplayFor(x => Model[i].Category)</td>
+                <td>@Html.DisplayFor(x => Model[i].Name)</td>
+                <td>@Html.DisplayFor(x => Model[i].Number)</td>
+                <td>@Html.DisplayFor(x => Model[i].RemainNumber)</td>
+                <td>@Html.DisplayFor(x => Model[i].Reason)</td>
+                <td>@Html.DisplayFor(x => Model[i].ApproveReason)</td>
+                <td>
+                    @if (Model[i].Status == InvoiceStatus.通过)
+                    {
+                        <span class="label label-success">@Html.DisplayFor(x => Model[i].Status)</span>
+                    }
+                    else if (Model[i].Status == InvoiceStatus.拒绝)
+                    {
+                        <span class="label label-danger">@Html.DisplayFor(x => Model[i].Status)</span>
+                    }
+                    else
+                    {
+                        <a href="#modal_approve_@i" data-toggle="modal" class="btn btn-success"><i class="fa fa-check"></i> 同意</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal_approve_@i" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times"></i></button>
+                                        <h3 class="modal-title">同意申请</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form asp-action="Approve" class="form-horizontal" method="post">
+                                            <input asp-for="@Model[i].InvoiceId" name="InvoiceId" type="hidden" />
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2">
+                                                    确认同意 @Html.DisplayFor(x => Model[i].Proposer) 申请 @Html.DisplayFor(x => Model[i].Name) ？
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-2">
+                                                    <button class="btn btn-primary" type="submit"><i class="fa fa-check"></i> 同意</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="#modal_edit_@i" data-toggle="modal" class="btn btn-info"><i class="fa fa-edit"></i> 另选</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal_edit_@i" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times"></i></button>
+                                        <h3 class="modal-title">申请修改</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form asp-action="Edit" class="form-horizontal" method="post">
+                                            <input asp-for="@Model[i].InvoiceId" name="InvoiceId" type="hidden" />
+                                            <input name="EquipmentId" type="hidden" />
+                                            <div class="form-group">
+                                                <label asp-for="@Model[i].Type" class="col-sm-2 control-label"></label>
+                                                <div class="col-sm-10">
+                                                    <select asp-for="@Model[i].Type" name="Type" asp-items="@Html.GetEnumSelectList<InventoryManage.Models.EquipmentType>()" class="form-control"></select>
+                                                    <span asp-validation-for="@Model[i].Type" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model[i].Category" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="@Model[i].Category" name="Category" list="CategoryList_@i" class="form-control" />
+                                                    <datalist id="CategoryList_@i" name="CategoryList"></datalist>
+                                                    <span asp-validation-for="@Model[i].Category" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model[i].Name" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="@Model[i].Name" name="Name" list="NameList_@i" class="form-control" />
+                                                    <datalist id="NameList_@i" name="NameList"></datalist>
+                                                    <span asp-validation-for="@Model[i].Name" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model[i].Detail" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="@Model[i].Detail" name="Detail" list="DetailList_@i" class="form-control" />
+                                                    <datalist id="DetailList_@i" name="DetailList"></datalist>
+                                                    <span asp-validation-for="@Model[i].Detail" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model[i].Number" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <input asp-for="@Model[i].Number" name="Number" class="form-control" />
+                                                    <span asp-validation-for="@Model[i].Number" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label asp-for="@Model[i].ApproveReason" class="col-md-2 control-label"></label>
+                                                <div class="col-md-10">
+                                                    <textarea asp-for="@Model[i].ApproveReason" name="ApproveReason" class="form-control" placeholder="修改理由" rows="3"></textarea>
+                                                    <span asp-validation-for="@Model[i].ApproveReason" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-2">
+                                                    <button class="btn btn-primary" type="submit"><i class="fa fa-edit"></i> 同意</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="#modal_refuse_@i" data-toggle="modal" class="btn btn-danger"><i class="fa fa-times"></i> 拒绝</a>
+                        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal_refuse_@i" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button"><i class="fa fa-times"></i></button>
+                                        <h3 class="modal-title">拒绝申请</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form asp-action="Refuse" class="form-horizontal" method="post">
+                                            <input asp-for="@Model[i].InvoiceId" name="InvoiceId" type="hidden" />
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-1 col-sm-10">
+                                                    <textarea asp-for="@Model[i].ApproveReason" name="ApproveReason" class="form-control" placeholder="拒绝理由" rows="3"></textarea>
+                                                    <span asp-validation-for="@Model[i].ApproveReason" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-1">
+                                                    <button class="btn btn-danger" type="submit"><i class="fa fa-times"></i> 拒绝</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="dataTables_info">@Model.StartItem 到 @Model.EndItem ，共 @Model.TotalItems 条记录</div>
+<div id="items_update" style="display:none">@Model.TotalItems</div>

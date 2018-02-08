@@ -74,9 +74,152 @@ namespace InventoryManage.Controllers
             return Json(DetailList);
         }
 
-        public IActionResult Approve()
+        [HttpGet]
+        public async Task<IActionResult> Approve()
         {
-            return View();
+            var invoicesQuery = from iv in _context.Invoices
+                                from wk in _context.Workers where wk.Id == iv.WorkerId
+                                from ap in _context.Workers.Where(x => x.Id == iv.ApproverId).DefaultIfEmpty()
+                                from eqp in _context.Equipments where eqp.EquipmentId == iv.EquipmentId
+                                orderby iv.Date descending
+                                select new ApproveInvoiceViewModel
+                                {
+                                    InvoiceId = iv.InvoiceId,
+                                    Proposer = wk.Name,
+                                    Type = eqp.Type,
+                                    Category = eqp.Category,
+                                    Name = eqp.Name,
+                                    Number = iv.Number,
+                                    RemainNumber = eqp.Number,
+                                    Date = iv.Date,
+                                    Reason = iv.Reason,
+                                    Status = iv.Status,
+                                    Approver = ap!=null ? ap.Name : "",
+                                    ApproveReason = iv.ApproveReason
+                                };
+            return View(await PaginatedList<ApproveInvoiceViewModel>.CreateAsync(invoicesQuery, 1, 5));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> InvoiceList(int? page, string filter, int? pageSize, bool unhandled)
+        {
+            var invoicesQuery = from iv in _context.Invoices
+                                from wk in _context.Workers
+                                where wk.Id == iv.WorkerId
+                                from ap in _context.Workers.Where(x => x.Id == iv.ApproverId).DefaultIfEmpty()
+                                from eqp in _context.Equipments
+                                where eqp.EquipmentId == iv.EquipmentId
+                                orderby iv.Date descending
+                                select new ApproveInvoiceViewModel
+                                {
+                                    InvoiceId = iv.InvoiceId,
+                                    Proposer = wk.Name,
+                                    Type = eqp.Type,
+                                    Category = eqp.Category,
+                                    Name = eqp.Name,
+                                    Number = iv.Number,
+                                    RemainNumber = eqp.Number,
+                                    Date = iv.Date,
+                                    Reason = iv.Reason,
+                                    Status = iv.Status,
+                                    Approver = ap != null ? ap.Name : "",
+                                    ApproveReason = iv.ApproveReason
+                                };
+            if (unhandled)
+            {
+                invoicesQuery = invoicesQuery.Where(iv => iv.Status == InvoiceStatus.未处理);
+            }
+            if (filter != null)
+            {
+                invoicesQuery = invoicesQuery.Where(iv => iv.Name.Contains(filter) || iv.Proposer.Contains(filter));
+            }
+            return PartialView("InvoicesPartial", await PaginatedList<ApproveInvoiceViewModel>.CreateAsync(invoicesQuery, page ?? 1, pageSize ?? 10));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Approve(int InvoiceId)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var invoice = await _context.Invoices.SingleOrDefaultAsync(i => i.InvoiceId == InvoiceId);
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    invoice.Status = InvoiceStatus.通过;
+                    invoice.ApproveDate = DateTime.Now;
+                    invoice.ApproverId = user.Id;
+
+                    _context.Update(invoice);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Approve");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("InvoiceId", "Type", "Category", "Name", "Detail", "Number", "ApproveReason")]
+            ApproveInvoiceViewModel approveInvoiceViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var equipment = await _context.Equipments.SingleOrDefaultAsync(e => e.Type == approveInvoiceViewModel.Type
+                        && e.Category == approveInvoiceViewModel.Category && e.Name == approveInvoiceViewModel.Name && e.Detail == approveInvoiceViewModel.Detail);
+                    if (equipment != null)
+                    {
+                        var invoice = await _context.Invoices.SingleOrDefaultAsync(i => i.InvoiceId == approveInvoiceViewModel.InvoiceId);
+                        var user = await _userManager.GetUserAsync(HttpContext.User);
+                        invoice.EquipmentId = equipment.EquipmentId;
+                        invoice.Number = approveInvoiceViewModel.Number;
+                        invoice.Status = InvoiceStatus.通过;
+                        invoice.ApproveReason = approveInvoiceViewModel.ApproveReason;
+                        invoice.ApproveDate = DateTime.Now;
+                        invoice.ApproverId = user.Id;
+
+                        _context.Update(invoice);
+                        await _context.SaveChangesAsync();
+                    }
+                    
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Approve");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Refuse(int InvoiceId, string ApproveReason)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var invoice = await _context.Invoices.SingleOrDefaultAsync(i => i.InvoiceId == InvoiceId);
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    invoice.Status = InvoiceStatus.拒绝;
+                    invoice.ApproveReason = ApproveReason;
+                    invoice.ApproveDate = DateTime.Now;
+                    invoice.ApproverId = user.Id;
+
+                    _context.Update(invoice);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Approve");
         }
     }
 }
