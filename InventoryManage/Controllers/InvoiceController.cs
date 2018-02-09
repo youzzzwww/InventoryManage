@@ -146,12 +146,21 @@ namespace InventoryManage.Controllers
                 {
                     var invoice = await _context.Invoices.SingleOrDefaultAsync(i => i.InvoiceId == InvoiceId);
                     var user = await _userManager.GetUserAsync(HttpContext.User);
-                    invoice.Status = InvoiceStatus.通过;
-                    invoice.ApproveDate = DateTime.Now;
-                    invoice.ApproverId = user.Id;
+                    if (invoice != null)
+                    {
+                        invoice.Status = InvoiceStatus.通过;
+                        invoice.ApproveDate = DateTime.Now;
+                        invoice.ApproverId = user.Id;
 
-                    _context.Update(invoice);
-                    await _context.SaveChangesAsync();
+                        var equipment = await _context.Equipments.SingleOrDefaultAsync(e => e.EquipmentId == invoice.EquipmentId);
+                        if (equipment != null && equipment.Number > invoice.Number)
+                        {
+                            equipment.Number -= invoice.Number;
+                            _context.Update(equipment);
+                            _context.Update(invoice);
+                        }                        
+                        await _context.SaveChangesAsync();
+                    }                   
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -183,7 +192,12 @@ namespace InventoryManage.Controllers
                         invoice.ApproveDate = DateTime.Now;
                         invoice.ApproverId = user.Id;
 
-                        _context.Update(invoice);
+                        if (equipment.Number > invoice.Number)
+                        {
+                            equipment.Number -= invoice.Number;
+                            _context.Update(equipment);
+                            _context.Update(invoice);
+                        }
                         await _context.SaveChangesAsync();
                     }
                     
@@ -218,6 +232,23 @@ namespace InventoryManage.Controllers
                 {
                     throw;
                 }
+            }
+            return RedirectToAction("Approve");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int InvoiceId)
+        {
+            try
+            {
+                var invoice = await _context.Invoices.SingleOrDefaultAsync(m => m.InvoiceId == InvoiceId);
+                _context.Invoices.Remove(invoice);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                throw;
             }
             return RedirectToAction("Approve");
         }
