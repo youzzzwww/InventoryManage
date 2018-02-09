@@ -19,7 +19,7 @@
                 <td>@Html.DisplayFor(x => Model[i].Worker.Name)</td>
                 <td>@Html.DisplayFor(x => Model[i].Worker.Department)</td>
                 <td>@Html.DisplayFor(x => Model[i].Worker.IsStaff)</td>
-                <td>@Html.DisplayFor(x => Model[i].Roles)</td>
+                <td>@String.Join(',', Model[i].Roles)</td>
                 <td class="center">
                     <a href="#modal_edit_@i" data-toggle="modal" class="btn btn-info"><i class="fa fa-edit"></i> 修改</a>
                     <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal_edit_@i" class="modal fade">
@@ -45,6 +45,20 @@
                                             <div class="col-md-10">
                                                 <input asp-for="@Model[i].Worker.Name" name="Worker.Name" class="form-control" />
                                                 <span asp-validation-for="@Model[i].Worker.Name" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="@Model[i].NewPassword" class="col-md-2 control-label"></label>
+                                            <div class="col-md-10">
+                                                <input asp-for="@Model[i].NewPassword" name="NewPassword" class="form-control" />
+                                                <span asp-validation-for="@Model[i].NewPassword" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label asp-for="@Model[i].ConfirmPassword" class="col-md-2 control-label"></label>
+                                            <div class="col-md-10">
+                                                <input asp-for="@Model[i].ConfirmPassword" name="ConfirmPassword" class="form-control" />
+                                                <span asp-validation-for="@Model[i].ConfirmPassword" class="text-danger"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">

@@ -99,11 +99,11 @@ namespace InventoryManage.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add(WorkerWithRole workerWithRole, string Password)
+        public async Task<IActionResult> Add(WorkerWithRole workerWithRole)
         {
             if (ModelState.IsValid)
             {
-                IdentityResult result = await _userManager.CreateAsync(workerWithRole.Worker, Password??"666666");
+                IdentityResult result = await _userManager.CreateAsync(workerWithRole.Worker, workerWithRole.NewPassword ?? "666666");
                 if (result.Succeeded)
                 {
                     foreach (var role in workerWithRole.Roles)
@@ -133,6 +133,16 @@ namespace InventoryManage.Controllers
                         var result = await _userManager.UpdateAsync(worker);
                         if (result.Succeeded)
                         {
+                            if (workerWithRole.NewPassword != null) // change password
+                            {
+                                result = await _userManager.RemovePasswordAsync(worker);
+                                if (result.Succeeded)
+                                {
+                                    await _userManager.AddPasswordAsync(worker, workerWithRole.NewPassword);
+                                }
+                            }                           
+
+                            // change roles
                             var existRoles = await _userManager.GetRolesAsync(workerWithRole.Worker);
                             var existRolesHS = new HashSet<string>(existRoles);
                             var changedRolesHS = new HashSet<string>(workerWithRole.Roles);
