@@ -12,6 +12,7 @@ using InventoryManage.Data;
 
 namespace InventoryManage.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly CenterContext _context;
@@ -110,6 +111,7 @@ namespace InventoryManage.Controllers
 
         // GET: /Home/Login
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login()
         {
             if (_signInManager.IsSignedIn(HttpContext.User))
@@ -120,6 +122,7 @@ namespace InventoryManage.Controllers
         }
         // POST: /Home/Login
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {

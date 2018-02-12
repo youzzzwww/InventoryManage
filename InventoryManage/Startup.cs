@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using InventoryManage.Data;
 using InventoryManage.Models;
+using InventoryManage.Authorization;
 
 namespace InventoryManage
 {
@@ -52,8 +53,24 @@ namespace InventoryManage
             });
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Account/LogIn";
-                options.LogoutPath = "/Account/LogOut";
+                options.LoginPath = "/Home/Login";
+                options.LogoutPath = "/Home/LogOff";
+            });
+            // Configure Authorization
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanViewEquipment", policyBuilder => policyBuilder.RequireClaim(Constant.EquipmentViewClaim));
+                options.AddPolicy("CanEditEquipment", policyBuilder => policyBuilder.RequireClaim(Constant.EquipmentEditClaim));
+                options.AddPolicy("CanAddEquipment", policyBuilder => policyBuilder.RequireClaim(Constant.EquipmentAddClaim));
+                options.AddPolicy("CanDeleteEquipment", policyBuilder => policyBuilder.RequireClaim(Constant.EquipmentDeleteClaim));
+                options.AddPolicy("CanViewInvoice", policyBuilder => policyBuilder.RequireClaim(Constant.InvoiceViewClaim));
+                options.AddPolicy("CanEditInvoice", policyBuilder => policyBuilder.RequireClaim(Constant.InvoiceEditClaim));
+                options.AddPolicy("CanAddInvoice", policyBuilder => policyBuilder.RequireClaim(Constant.InvoiceAddClaim));
+                options.AddPolicy("CanDeleteInvoice", policyBuilder => policyBuilder.RequireClaim(Constant.InvoiceDeleteClaim));
+                options.AddPolicy("CanViewWorker", policyBuilder => policyBuilder.RequireClaim(Constant.WorkerViewClaim));
+                options.AddPolicy("CanEditWorker", policyBuilder => policyBuilder.RequireClaim(Constant.WorkerEditClaim));
+                options.AddPolicy("CanAddWorker", policyBuilder => policyBuilder.RequireClaim(Constant.WorkerAddClaim));
+                options.AddPolicy("CanDeleteWorker", policyBuilder => policyBuilder.RequireClaim(Constant.WorkerDeleteClaim));
             });
         }
 

@@ -22,6 +22,7 @@ namespace InventoryManage.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Policy = "CanAddInvoice")]
         public async Task<IActionResult> Add(int? equipmentId)
         {
             var invoice = new Invoice();
@@ -38,6 +39,7 @@ namespace InventoryManage.Controllers
             return View(invoice);
         }
         [HttpPost]
+        [Authorize(Policy = "CanAddInvoice")]
         public async Task<IActionResult> Add([Bind("EquipmentId", "Number", "Reason")] Invoice invoice)
         {
             try
@@ -75,6 +77,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanViewInvoice")]
         public async Task<IActionResult> Approve()
         {
             var invoicesQuery = from iv in _context.Invoices
@@ -101,6 +104,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanViewInvoice")]
         public async Task<IActionResult> InvoiceList(int? page, string filter, int? pageSize, bool unhandled)
         {
             var invoicesQuery = from iv in _context.Invoices
@@ -137,6 +141,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanEditInvoice")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Approve(int InvoiceId)
         {
@@ -171,6 +176,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanEditInvoice")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("InvoiceId", "Type", "Category", "Name", "Detail", "Number", "ApproveReason")]
             ApproveInvoiceViewModel approveInvoiceViewModel)
@@ -211,6 +217,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanEditInvoice")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Refuse(int InvoiceId, string ApproveReason)
         {
@@ -237,6 +244,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanDeleteInvoice")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int InvoiceId)
         {

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using InventoryManage.Models;
+using InventoryManage.Authorization;
 
 namespace InventoryManage.Data
 {
@@ -22,32 +25,78 @@ namespace InventoryManage.Data
                 return;
             }
 
-            var roles = new CenterRole[]
+            // Roles and Claims
+            var roles = new Dictionary<string, CenterRole>
             {
-                new CenterRole{Name="Admin"},
-                new CenterRole{Name="Manager"},
-                new CenterRole{Name="Customer"}
+                { Constant.Admin, new CenterRole{Name=Constant.Admin} },
+                { Constant.EquipmentManager, new CenterRole{Name=Constant.EquipmentManager} },
+                { Constant.WorkerManager, new CenterRole{Name=Constant.WorkerManager} },
+                { Constant.Approver, new CenterRole{Name=Constant.Approver} },
+                { Constant.NormalUser, new CenterRole{Name=Constant.NormalUser} }
             };
             foreach (var r in roles)
             {
-                await roleManager.CreateAsync(r);
+                await roleManager.CreateAsync(r.Value);
             }
 
+            var EquipmentClaims = new Dictionary<string, Claim>
+            {
+                {"View", new Claim(Constant.EquipmentViewClaim, Constant.EquipmentViewClaim) },
+                {"Add", new Claim(Constant.EquipmentAddClaim,Constant.EquipmentAddClaim)},
+                {"Edit", new Claim(Constant.EquipmentEditClaim, Constant.EquipmentEditClaim)},
+                {"Delete", new Claim(Constant.EquipmentDeleteClaim, Constant.EquipmentDeleteClaim)}
+            };
+            var InvoiceClaims = new Dictionary<string, Claim>
+            {
+                {"View", new Claim(Constant.InvoiceViewClaim, Constant.InvoiceViewClaim) },
+                {"Add", new Claim(Constant.InvoiceAddClaim,Constant.InvoiceAddClaim)},
+                {"Edit", new Claim(Constant.InvoiceEditClaim, Constant.InvoiceEditClaim)},
+                {"Delete", new Claim(Constant.InvoiceDeleteClaim, Constant.InvoiceDeleteClaim)}
+            };
+            var WorkerClaims = new Dictionary<string, Claim>
+            {
+                {"View", new Claim(Constant.WorkerViewClaim, Constant.WorkerViewClaim) },
+                {"Add", new Claim(Constant.WorkerAddClaim,Constant.WorkerAddClaim)},
+                {"Edit", new Claim(Constant.WorkerEditClaim, Constant.WorkerEditClaim)},
+                {"Delete", new Claim(Constant.WorkerDeleteClaim, Constant.WorkerDeleteClaim)}
+            };
+            foreach (var c in EquipmentClaims)
+            {
+                await roleManager.AddClaimAsync(roles[Constant.Admin], c.Value);
+                await roleManager.AddClaimAsync(roles[Constant.EquipmentManager], c.Value);
+            }
+            foreach (var c in InvoiceClaims)
+            {
+                await roleManager.AddClaimAsync(roles[Constant.Admin], c.Value);
+                await roleManager.AddClaimAsync(roles[Constant.Approver], c.Value);
+            }
+            foreach (var c in WorkerClaims)
+            {
+                await roleManager.AddClaimAsync(roles[Constant.Admin], c.Value);
+                await roleManager.AddClaimAsync(roles[Constant.WorkerManager], c.Value);
+            }
+            await roleManager.AddClaimAsync(roles[Constant.NormalUser], InvoiceClaims["Add"]);
+
+
+            // User and add to role
             const string default_passwd = "666666";
             var workers = new Worker[]
             {
-                new Worker{UserName="xiesongbo",Name="谢松波",EnrollmentDate=DateTime.Parse("2017-06-01"),Department="信息部"},
-                new Worker{UserName="maiweixian",Name="麦伟贤",EnrollmentDate=DateTime.Parse("2007-06-01"),Department="信息部"},
-                new Worker{UserName="xiaosimin",Name="肖思敏",EnrollmentDate=DateTime.Now,Department="办公室"}
+                new Worker{UserName="xiesongbo",Name="谢松波",EnrollmentDate=DateTime.Parse("2017-06-01"),Department="信息部",IsStaff=true},
+                new Worker{UserName="maiweixian",Name="麦伟贤",EnrollmentDate=DateTime.Parse("2007-06-01"),Department="信息部",IsStaff=true},
+                new Worker{UserName="chenjinyuan",Name="陈劲源",EnrollmentDate=DateTime.Parse("2007-06-01"),Department="信息部",IsStaff=true},
+                new Worker{UserName="xiaosimin",Name="肖思敏",EnrollmentDate=DateTime.Now,Department="办公室",IsStaff=true}
             };
             foreach (Worker w in workers)
             {
                 await userManager.CreateAsync(w, default_passwd);
             }
-            await userManager.AddToRoleAsync(workers.Single(w => w.UserName == "xiesongbo"), "Admin");
-            await userManager.AddToRoleAsync(workers.Single(w => w.UserName == "maiweixian"), "Manager");
-            await userManager.AddToRoleAsync(workers.Single(w => w.UserName == "xiaosimin"), "Customer");
+            await userManager.AddToRoleAsync(workers.Single(w => w.UserName == "xiesongbo"), Constant.Admin);
+            await userManager.AddToRoleAsync(workers.Single(w => w.UserName == "maiweixian"), Constant.Approver);
+            await userManager.AddToRoleAsync(workers.Single(w => w.UserName == "chenjinyuan"), Constant.EquipmentManager);
+            await userManager.AddToRoleAsync(workers.Single(w => w.UserName == "xiaosimin"), Constant.NormalUser);
 
+            // other data initial
             var equipments = new Equipment[]
             {
                 new Equipment{Type=EquipmentType.固定资产, Category="台式机", Name="Dell optiplex 7040", Detail="内存:4G;CPU:i7", Number=5},

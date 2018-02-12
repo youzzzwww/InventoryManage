@@ -26,6 +26,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanViewWorker")]
         public async Task<IActionResult> Index()
         {
             var rs = from wk in _context.Workers
@@ -63,6 +64,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanViewWorker")]
         public async Task<IActionResult> WorkerList(int? page, string filter, int? pageSize)
         {
             var rs = from wk in _context.Workers
@@ -98,6 +100,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanAddWorker")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(WorkerWithRole workerWithRole)
         {
@@ -116,6 +119,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanEditWorker")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(WorkerWithRole workerWithRole)
         {
@@ -175,6 +179,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanDeleteWorker")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int Id)
         {

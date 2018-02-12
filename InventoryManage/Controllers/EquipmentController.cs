@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using InventoryManage.Models;
 using InventoryManage.Data;
@@ -19,6 +20,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanViewEquipment")]
         public async Task<IActionResult> Store()
         {
             var equipmentsQuery = from eqp in _context.Equipments select eqp;
@@ -31,6 +33,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanViewEquipment")]
         public async Task<IActionResult> EquipmentList(int? page, string filter, int? pageSize)
         {
             var equipmentsQuery = from eqp in _context.Equipments select eqp;
@@ -71,6 +74,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanEditEquipment")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Equipment equipment)
         {
@@ -90,6 +94,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanAddEquipment")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(EquipmentIndexViewModel equipmentIndex)
         {          
@@ -120,6 +125,7 @@ namespace InventoryManage.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanDeleteEquipment")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int EquipmentId)
         {           
