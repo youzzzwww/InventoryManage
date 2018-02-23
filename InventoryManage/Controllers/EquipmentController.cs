@@ -27,7 +27,7 @@ namespace InventoryManage.Controllers
             var equipmentViewModel = new EquipmentIndexViewModel
             {
                 EquipmentAdd = new Equipment(),
-                EquipmentList = await PaginatedList<Equipment>.CreateAsync(equipmentsQuery, 1, 3)
+                EquipmentList = await PaginatedList<Equipment>.CreateAsync(equipmentsQuery, 1, 10)
             };
             return View(equipmentViewModel);
         }

@@ -70,7 +70,7 @@ namespace InventoryManage.Controllers
             {
                 AssetViewModel = await assetsQuery.ToListAsync(),
                 ConsumableViewModel = await consumablesQuery.ToListAsync(),
-                InvoiceList = await PaginatedList<InvoiceViewModel>.CreateAsync(invoiceQuery, 1, 3)
+                InvoiceList = await PaginatedList<InvoiceViewModel>.CreateAsync(invoiceQuery, 1, 5)
             };
             return View(personalIndexViewModel);
         }
@@ -91,7 +91,7 @@ namespace InventoryManage.Controllers
                                    Status = iv.Status,
                                    ApproveReason = iv.ApproveReason
                                };
-            var invoiceList = await PaginatedList<InvoiceViewModel>.CreateAsync(invoiceQuery, page??1, pageSize??10);
+            var invoiceList = await PaginatedList<InvoiceViewModel>.CreateAsync(invoiceQuery, page??1, pageSize??5);
             return PartialView("PersonalInvoicePartial", invoiceList);
         }
 

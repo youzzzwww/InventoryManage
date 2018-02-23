@@ -100,7 +100,7 @@ namespace InventoryManage.Controllers
                                     Approver = ap!=null ? ap.Name : "",
                                     ApproveReason = iv.ApproveReason
                                 };
-            return View(await PaginatedList<ApproveInvoiceViewModel>.CreateAsync(invoicesQuery, 1, 5));
+            return View(await PaginatedList<ApproveInvoiceViewModel>.CreateAsync(invoicesQuery, 1, 10));
         }
 
         [HttpGet]

@@ -58,7 +58,7 @@ namespace InventoryManage.Controllers
                         Value = r.Name,
                     }).ToList()
                 },
-                WorkerList = await PaginatedList<WorkerWithRole>.CreateAsync(workersQuery, 1, 3)
+                WorkerList = await PaginatedList<WorkerWithRole>.CreateAsync(workersQuery, 1, 10)
             };
             return View(workerViewModel);
         }
